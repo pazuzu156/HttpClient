@@ -1,0 +1,6 @@
+src/obj/
+src/bin/
+.vs/
+*.suo
+*.swp
+

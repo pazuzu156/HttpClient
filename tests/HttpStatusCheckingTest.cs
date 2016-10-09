@@ -16,7 +16,7 @@ namespace HttpClientTests
 		/// Run a status check with string URL
 		/// </summary>
 		[TestMethod]
-		public void Test_StatusCheck_StringUrl()
+		public void StatusCheckTest_StringUrl()
 		{
 			var url = "http://google.com";
 			var sc = new HttpStatus(url);
@@ -27,7 +27,7 @@ namespace HttpClientTests
 		/// Run a status check with Uri class object URL
 		/// </summary>
 		[TestMethod]
-		public void Test_StatusCheck_ClassUrl()
+		public void StatusCheckTest_ClassUrl()
 		{
 			var url = new Uri("http://google.com");
 			var sc = new HttpStatus(url);

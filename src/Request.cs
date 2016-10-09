@@ -12,22 +12,19 @@ namespace Pazuzu156.HttpClient
 	{
 		private HttpWebRequest _request;
 		private Uri _url;
-		private Headers.ContentType _contentType;
+		private ContentType _contentType;
 		private string _method;
 		private int _timeout;
 
 		/// <summary>
-		/// Request headers
+		/// Request content type
 		/// </summary>
-		public struct Headers
+		public enum ContentType
 		{
-			public enum ContentType
-			{
-				Html,
-				Json,
-				Text,
-				Null // nullable content type (this will throw errors for unsupported content type)
-			}
+			Html,
+			Json,
+			Text,
+			Null // nullable content type (this will throw errors for unsupported content type)
 		}
 
 		public bool IsTimedOut { get; private set; }
@@ -41,7 +38,7 @@ namespace Pazuzu156.HttpClient
 		/// <param name="timeout">Request timeout in miliseconds</param>
 		/// <returns></returns>
 		public static Request Create(string url, string method="GET",
-			Headers.ContentType contentType = Headers.ContentType.Html, int timeout = 5000)
+			ContentType contentType = ContentType.Html, int timeout = 5000)
 		{
 			return Request.Create(new Uri(url), method, contentType, timeout);
 		}
@@ -55,7 +52,7 @@ namespace Pazuzu156.HttpClient
 		/// <param name="timeout">Request timeout in miliseconds</param>
 		/// <returns></returns>
 		public static Request Create(Uri url, string method="GET",
-			Headers.ContentType contentType = Headers.ContentType.Html, int timeout = 5000)
+			ContentType contentType = ContentType.Html, int timeout = 5000)
 		{
 			var self = new Request();
 			self._url = url;
@@ -109,15 +106,15 @@ namespace Pazuzu156.HttpClient
 			this._request.Timeout = this._timeout;
 		}
 
-		private string _getContentType(Headers.ContentType type)
+		private string _getContentType(ContentType type)
 		{
 			switch(type)
 			{
-				case Headers.ContentType.Html:
+				case ContentType.Html:
 					return "text/html";
-				case Headers.ContentType.Json:
+				case ContentType.Json:
 					return "application/json";
-				case Headers.ContentType.Text:
+				case ContentType.Text:
 					return "text/plain";
 				default:
 					return "text/plain";

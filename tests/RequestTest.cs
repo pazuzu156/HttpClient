@@ -15,7 +15,7 @@ namespace HttpClientTests
 	{
 		#region Test case methods
 		[TestMethod]
-		public void Test_RequestCreation_Base()
+		public void RequestTest_RequestCreation_Base()
 		{
 			var request = Request.Create("http://cdn.kalebklein.com/request.php");
 			
@@ -28,7 +28,7 @@ namespace HttpClientTests
 		}
 
 		[TestMethod]
-		public void Test_RequestCreation_Method()
+		public void RequestTest_RequestCreation_Method()
 		{
 			// The request will be created twice to test GET/POST requests
 			var getRequest = Request.Create("http://cdn.kalebklein.com/request.php", "GET");
@@ -44,16 +44,16 @@ namespace HttpClientTests
 		}
 
 		[TestMethod]
-		public void Test_RequestCreation_ContentType()
+		public void RequestTest_RequestCreation_ContentType()
 		{
-			var request = Request.Create("http://cdn.kalebklein.com/request.php", contentType: Request.Headers.ContentType.Text);
+			var request = Request.Create("http://cdn.kalebklein.com/request.php", contentType: Request.ContentType.Text);
 
 			Assert.IsNull(request.GetRequestStream());
 			Assert.IsNotNull(request.GetResponse());
 		}
 
 		[TestMethod]
-		public void Test_RequestCreation_Timeout()
+		public void RequestTest_RequestCreation_Timeout()
 		{
 			var request = Request.Create("http://cdn.kalebklein.com/request_timeout.php", timeout: 1000);
 

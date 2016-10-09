@@ -38,7 +38,7 @@ namespace Pazuzu156.HttpClient
 
 		private void _testConnection()
 		{
-			var request = Request.Create(this._url, "GET", Request.Headers.ContentType.Html, 5000);
+			var request = Request.Create(this._url, "GET", Request.ContentType.Html, 5000);
 			var response = Response.Create(request);
 
 			this.IsConnected = (response.StatusCode == HttpStatusCode.OK) ? true : false;

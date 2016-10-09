@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.IO;
+using System.Diagnostics;
 
 namespace Pazuzu156.HttpClient
 {
@@ -16,21 +17,17 @@ namespace Pazuzu156.HttpClient
 		private Stream _responseStream;
 
 		// headers for response
-		private Headers _headers;
-		private Headers.ContentType _contentType;
+		private ContentType _contentType;
 
 		/// <summary>
-		/// Response headers
+		/// Response content type
 		/// </summary>
-		public struct Headers
+		public enum ContentType
 		{
-			public enum ContentType
-			{
-				Html,
-				Json,
-				Text,
-				Null // nullable content type (this will throw errors for unsupported content type)
-			}
+			Html,
+			Json,
+			Text,
+			Null // nullable content type (this will throw errors for unsupported content type)
 		}
 
 		/// <summary>
@@ -59,9 +56,13 @@ namespace Pazuzu156.HttpClient
 			return self;
 		}
 
-		public Headers GetResponseHeaders()
+		/// <summary>
+		/// Gets the response headers
+		/// </summary>
+		/// <returns></returns>
+		public WebHeaderCollection GetResponseHeaders()
 		{
-			return this._headers;
+			return this._response.Headers;
 		}
 
 		/// <summary>
@@ -89,10 +90,47 @@ namespace Pazuzu156.HttpClient
 		}
 
 		/// <summary>
+		/// Gets the content type from header
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		public string GetContentTypeString(ContentType type)
+		{
+			switch(type)
+			{
+				case ContentType.Html:
+					return "text/html";
+				case ContentType.Json:
+					return "application/json";
+				case ContentType.Text:
+					return "text/plain";
+				default:
+					return null;
+			}
+		}
+
+		public ContentType ConvertToContentType(string type)
+		{
+			string[] headers = type.Split(';');
+
+			switch (headers[0].ToLower())
+			{
+				case "text/html":
+					return ContentType.Html;
+				case "application/json":
+					return ContentType.Json;
+				case "text/plain":
+					return ContentType.Text;
+				default:
+					return ContentType.Null;
+			}
+		}
+
+		/// <summary>
 		/// Gets the response's content type
 		/// </summary>
 		/// <returns></returns>
-		public Headers.ContentType GetContentType()
+		public ContentType GetContentType()
 		{
 			return this._contentType;
 		}
@@ -103,24 +141,7 @@ namespace Pazuzu156.HttpClient
 			this.Status = this._response.StatusDescription;
 			this.StatusCode = this._response.StatusCode;
 			this._responseStream = this._response.GetResponseStream();
-			this._contentType = this._getContentType(this._response.ContentType);
-		}
-
-		private Headers.ContentType _getContentType(string type)
-		{
-			string[] headers = type.Split(';');
-
-			switch(headers[0].ToLower())
-			{
-				case "test/html":
-					return Headers.ContentType.Html;
-				case "application/json":
-					return Headers.ContentType.Json;
-				case "text/plain":
-					return Headers.ContentType.Text;
-				default:
-					return Headers.ContentType.Null;
-			}
+			this._contentType = this.ConvertToContentType(this._response.ContentType);
 		}
 	}
 }

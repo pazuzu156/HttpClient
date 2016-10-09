@@ -12,19 +12,25 @@ namespace Pazuzu156.HttpClient
 	{
 		private HttpWebRequest _request;
 		private Uri _url;
-		private ContentType _contentType;
+		private Headers.ContentType _contentType;
 		private string _method;
 		private int _timeout;
 
 		/// <summary>
-		/// Request content type
+		/// Request headers
 		/// </summary>
-		public enum ContentType
+		public struct Headers
 		{
-			Html,
-			Json,
-			Text
+			public enum ContentType
+			{
+				Html,
+				Json,
+				Text,
+				Null // nullable content type (this will throw errors for unsupported content type)
+			}
 		}
+
+		public bool IsTimedOut { get; private set; }
 
 		/// <summary>
 		/// Create a new Http Request
@@ -35,7 +41,7 @@ namespace Pazuzu156.HttpClient
 		/// <param name="timeout">Request timeout in miliseconds</param>
 		/// <returns></returns>
 		public static Request Create(string url, string method="GET",
-			ContentType contentType=ContentType.Html, int timeout=5000)
+			Headers.ContentType contentType = Headers.ContentType.Html, int timeout = 5000)
 		{
 			return Request.Create(new Uri(url), method, contentType, timeout);
 		}
@@ -49,7 +55,7 @@ namespace Pazuzu156.HttpClient
 		/// <param name="timeout">Request timeout in miliseconds</param>
 		/// <returns></returns>
 		public static Request Create(Uri url, string method="GET",
-			ContentType contentType=ContentType.Html, int timeout=5000)
+			Headers.ContentType contentType = Headers.ContentType.Html, int timeout = 5000)
 		{
 			var self = new Request();
 			self._url = url;
@@ -80,7 +86,19 @@ namespace Pazuzu156.HttpClient
 		/// <returns></returns>
 		public WebResponse GetResponse()
 		{
-			return this._request.GetResponse();
+			WebResponse response;
+
+			try
+			{
+				response = this._request.GetResponse();
+				this.IsTimedOut = false;
+				return response;
+			}
+			catch
+			{
+				this.IsTimedOut = true;
+				return null;
+			}
 		}
 
 		private void _generateHttpRequest()
@@ -91,15 +109,15 @@ namespace Pazuzu156.HttpClient
 			this._request.Timeout = this._timeout;
 		}
 
-		private string _getContentType(ContentType type)
+		private string _getContentType(Headers.ContentType type)
 		{
 			switch(type)
 			{
-				case ContentType.Html:
+				case Headers.ContentType.Html:
 					return "text/html";
-				case ContentType.Json:
+				case Headers.ContentType.Json:
 					return "application/json";
-				case ContentType.Text:
+				case Headers.ContentType.Text:
 					return "text/plain";
 				default:
 					return "text/plain";

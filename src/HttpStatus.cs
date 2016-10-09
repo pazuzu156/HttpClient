@@ -26,9 +26,19 @@ namespace Pazuzu156.HttpClient
 			this._testConnection();
 		}
 
+		/// <summary>
+		/// Creates new status check and performs the test
+		/// </summary>
+		/// <param name="url"></param>
+		public HttpStatus(Uri url)
+		{
+			this._url = url.ToString();
+			this._testConnection();
+		}
+
 		private void _testConnection()
 		{
-			var request = Request.Create(this._url, "GET", Request.ContentType.Html, 5000);
+			var request = Request.Create(this._url, "GET", Request.Headers.ContentType.Html, 5000);
 			var response = Response.Create(request);
 
 			this.IsConnected = (response.StatusCode == HttpStatusCode.OK) ? true : false;

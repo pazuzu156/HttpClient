@@ -3,4 +3,6 @@ src/bin/
 .vs/
 *.suo
 *.swp
-
+TestResults/
+tests/bin
+tests/obj

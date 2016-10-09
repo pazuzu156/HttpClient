@@ -15,6 +15,24 @@ namespace Pazuzu156.HttpClient
 		private Stream _requestStream;
 		private Stream _responseStream;
 
+		// headers for response
+		private Headers _headers;
+		private Headers.ContentType _contentType;
+
+		/// <summary>
+		/// Response headers
+		/// </summary>
+		public struct Headers
+		{
+			public enum ContentType
+			{
+				Html,
+				Json,
+				Text,
+				Null // nullable content type (this will throw errors for unsupported content type)
+			}
+		}
+
 		/// <summary>
 		/// Response status description
 		/// </summary>
@@ -41,6 +59,11 @@ namespace Pazuzu156.HttpClient
 			return self;
 		}
 
+		public Headers GetResponseHeaders()
+		{
+			return this._headers;
+		}
+
 		/// <summary>
 		/// Gets the response body
 		/// </summary>
@@ -65,12 +88,39 @@ namespace Pazuzu156.HttpClient
 			}
 		}
 
+		/// <summary>
+		/// Gets the response's content type
+		/// </summary>
+		/// <returns></returns>
+		public Headers.ContentType GetContentType()
+		{
+			return this._contentType;
+		}
+
 		private void _generateHttpResponse()
 		{
 			this._response = (HttpWebResponse)this._request.GetResponse();
 			this.Status = this._response.StatusDescription;
 			this.StatusCode = this._response.StatusCode;
 			this._responseStream = this._response.GetResponseStream();
+			this._contentType = this._getContentType(this._response.ContentType);
+		}
+
+		private Headers.ContentType _getContentType(string type)
+		{
+			string[] headers = type.Split(';');
+
+			switch(headers[0].ToLower())
+			{
+				case "test/html":
+					return Headers.ContentType.Html;
+				case "application/json":
+					return Headers.ContentType.Json;
+				case "text/plain":
+					return Headers.ContentType.Text;
+				default:
+					return Headers.ContentType.Null;
+			}
 		}
 	}
 }

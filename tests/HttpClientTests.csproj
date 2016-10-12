@@ -51,6 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="File\DownloadTest.cs" />
     <Compile Include="HttpStatusCheckingTest.cs" />
     <Compile Include="PingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -109,6 +109,11 @@ namespace Pazuzu156.HttpClient
 			}
 		}
 
+		/// <summary>
+		/// Converts given string into a Response.ContentType
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
 		public ContentType ConvertToContentType(string type)
 		{
 			string[] headers = type.Split(';');

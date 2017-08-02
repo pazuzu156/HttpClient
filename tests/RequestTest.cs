@@ -17,7 +17,7 @@ namespace HttpClientTests
 		[TestMethod]
 		public void RequestTest_RequestCreation_Base()
 		{
-			var request = Request.Create("http://cdn.kalebklein.com/request.php");
+            var request = Request.Create("https://cdn.kalebklein.com/httpclient/request.php");
 			
 			// GET request | Attempt request stream gathering
 			// This should always return null on GET request
@@ -31,8 +31,8 @@ namespace HttpClientTests
 		public void RequestTest_RequestCreation_Method()
 		{
 			// The request will be created twice to test GET/POST requests
-			var getRequest = Request.Create("http://cdn.kalebklein.com/request.php", "GET");
-			var postRequest = Request.Create("http://cdn.kalebklein.com/request.php", "POST");
+            var getRequest = Request.Create("https://cdn.kalebklein.com/httpclient/request.php", "GET");
+            var postRequest = Request.Create("https://cdn.kalebklein.com/httpclient/request.php", "POST");
 
 			// Testing get request
 			Assert.IsNull(getRequest.GetRequestStream());
@@ -46,7 +46,7 @@ namespace HttpClientTests
 		[TestMethod]
 		public void RequestTest_RequestCreation_ContentType()
 		{
-			var request = Request.Create("http://cdn.kalebklein.com/request.php", contentType: Request.ContentType.Text);
+            var request = Request.Create("https://cdn.kalebklein.com/httpclient/request.php", contentType: Request.ContentType.Text);
 
 			Assert.IsNull(request.GetRequestStream());
 			Assert.IsNotNull(request.GetResponse());
@@ -55,7 +55,7 @@ namespace HttpClientTests
 		[TestMethod]
 		public void RequestTest_RequestCreation_Timeout()
 		{
-			var request = Request.Create("http://cdn.kalebklein.com/request_timeout.php", timeout: 1000);
+            var request = Request.Create("https://cdn.kalebklein.com/httpclient/request_timeout.php", timeout: 1000);
 
 			// Forced timeout, so now let's assert the timeout was true!
 			Assert.IsNull(request.GetResponse());

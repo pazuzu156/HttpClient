@@ -10,64 +10,65 @@ using System.Diagnostics;
 
 namespace HttpClientTests
 {
-	[TestClass]
-	public class PingTest
-	{
-		[TestMethod]
-		public void PingTest_TestPingBase()
-		{
-			Ping p = new Ping();
-			p.Send("kalebklein.com");
+    [TestClass]
+    public class PingTest
+    {
+        [TestMethod]
+        public void PingTest_TestPingBase()
+        {
+            Ping p = new Ping();
+            p.Send("kalebklein.com");
 
-			this._log(p, "Ping with default itteration count");
+            this._log(p, "Ping with default itteration count");
 
-			Assert.AreEqual("Success", p.PingStatus.ToString());
-		}
+            Assert.AreEqual("Success", p.PingStatus.ToString());
+        }
 
-		[TestMethod]
-		public void PingTest_TestPingWithCustomItterCount()
-		{
-			int count = 10;
-			Ping p = new Ping();
-			p.Send("kalebklein.com", count);
+        [TestMethod]
+        public void PingTest_TestPingWithCustomItterCount()
+        {
+            int count = 10;
+            Ping p = new Ping();
+            p.Send("kalebklein.com", count);
 
-			this._log(p, "Ping with " + count + " itterations");
+            this._log(p, "Ping with " + count + " itterations");
 
-			Assert.AreEqual("Success", p.PingStatus.ToString());
-		}
+            Assert.AreEqual("Success", p.PingStatus.ToString());
+        }
 
-		private void _log(Ping p, string intro)
-		{
-			Debug.WriteLine("Ping testing: " + intro + "\n");
-			Debug.WriteLine("PingStatus: " + p.PingStatus.ToString() + "\n");
+        private void _log(Ping p, string intro)
+        {
+            Debug.WriteLine("Ping testing: " + intro + "\n");
+            Debug.WriteLine("PingStatus: " + p.PingStatus.ToString() + "\n");
 
-			long small = p.AllPingTimes[0]["LastPingTime"];
-			long large = p.AllPingTimes[0]["LastPingTime"];
+            long small = p.AllPingTimes[0]["LastPingTime"];
+            long large = p.AllPingTimes[0]["LastPingTime"];
 
-			Debug.WriteLine("==== Start All Ping Times ====");
-			for (int i = 0; i < p.AllPingTimes.Count; i++)
-			{
-				var pingItem = p.AllPingTimes[i];
+            Debug.WriteLine("==== Start All Ping Times ====");
 
-				var s = string.Format("Ping itteration: {0}\nLast ping time in ms: {1}\n"
-					+ "Total ping time in ms: {2}\n"
-					+ "Ping status: {3}\n",
-					i + 1, pingItem["LastPingTime"], pingItem["TotalPingTime"], p.AllStatuses[i]);
+            for (int i = 0; i < p.AllPingTimes.Count; i++) {
+                var pingItem = p.AllPingTimes[i];
 
-				Debug.WriteLine(s);
+                var s = string.Format("Ping itteration: {0}\nLast ping time in ms: {1}\n"
+                    + "Total ping time in ms: {2}\n"
+                    + "Ping status: {3}\n",
+                    i + 1, pingItem["LastPingTime"], pingItem["TotalPingTime"], p.AllStatuses[i]);
 
-				if (pingItem["LastPingTime"] > large)
-					large = pingItem["LastPingTime"];
-				else if (pingItem["LastPingTime"] < small)
-					small = pingItem["LastPingTime"];
-			}
-			Debug.WriteLine("==== End All Ping Times ====");
+                Debug.WriteLine(s);
 
-			Debug.WriteLine("Ping time in ms: " + p.TotalPingTime);
-			Debug.WriteLine("Last ping time in ms: " + p.LastPingTime + "\n");
+                if (pingItem["LastPingTime"] > large) {
+                    large = pingItem["LastPingTime"];
+                } else if (pingItem["LastPingTime"] < small) {
+                    small = pingItem["LastPingTime"];
+                }
+            }
+            Debug.WriteLine("==== End All Ping Times ====");
 
-			Debug.WriteLine("Shortest ping time in ms: " + small);
-			Debug.WriteLine("Longest ping time in ms: " + large);
-		}
-	}
+            Debug.WriteLine("Ping time in ms: " + p.TotalPingTime);
+            Debug.WriteLine("Last ping time in ms: " + p.LastPingTime + "\n");
+
+            Debug.WriteLine("Shortest ping time in ms: " + small);
+            Debug.WriteLine("Longest ping time in ms: " + large);
+        }
+    }
 }
